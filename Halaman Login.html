@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Stockly</title>
+    <link rel="stylesheet" href="HL.css">
+</head>
+<body>
+    <main class="login-page">
+        <section class="login-card">
+
+            <div class="logo-section">
+                <img src="logo pbl.png"
+                     alt="Logo Stockly"
+                     class="logo">
+                <h1>Selamat Datang di Stockly!</h1>
+                <p>Masuk untuk mengelola stok dan kebutuhan rumah tangga Anda.</p>
+            </div>
+            <form id="loginForm">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Masukkan email Anda"
+                    autocomplete="email"
+                    required>
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Masukkan password"
+                    autocomplete="current-password"
+                    required>
+                <a href="#" class="forgot-link">Lupa password?</a>
+                <button type="submit">Login</button>
+            </form>
+            <p class="register-text">
+                Aplikasi Stok dan Kebutuhan Rumah Tangga
+            </p>
+        </section>
+    </main>
+    <script>
+        const loginForm = document.getElementById("loginForm");
+
+        loginForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Berpindah ke halaman beranda
+            window.location.href = "Beranda.html";
+        });
+    </script>
+</body>
+</html>
+

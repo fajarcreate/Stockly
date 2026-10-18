@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockly - Beranda</title>
+    <link rel="stylesheet" href="Beranda.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="logo pbl.png" alt="Logo Stocly">
+            <h2>Stockly</h2>
+        </div>
+
+        <p class="menu-title">MENU </p>
+
+        <button class="menu active" onclick="bukaHalaman('Beranda', this)">
+            Beranda
+        </button>
+        <button class="menu" onclick="bukaHalaman('Daftar Stok', this)">
+            Daftar Stok
+        </button>
+        <button class="menu" onclick="bukaHalaman('Kebutuhan', this)">
+            Kebutuhan
+        </button>
+        <button class="menu" onclick="bukaHalaman('Riwayat', this)">
+            Riwayat
+        </button>
+    </aside>
+
+    <!-- Konten utama -->
+    <main class="main-content">
+
+        <header class="header">
+            <button class="toggle" onclick="toggleSidebar()">☰</button>
+
+            <div>
+                <small>STOCKLY</small>
+                <h2 id="judulHeader">Beranda</h2>
+            </div>
+
+            <div class="akun">
+                <div class="avatar">AR</div>
+                <div>
+                    <strong>Alya Najwa</strong>
+                    <small>Pengguna</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="content" id="isiHalaman">
+
+            <!-- Sambutan -->
+            <div class="welcome">
+                <div>
+                    <h1>Selamat pagi, Alya</h1>
+                    <p>Berikut ringkasan persediaan rumah tangga Anda hari ini.</p>
+                </div>
+
+                <button class="tombol" onclick="bukaForm()">
+                    + Tambah Barang
+                </button>
+            </div>
+
+            <!-- Ringkasan stok -->
+            <div class="ringkasan">
+                <div class="kartu">
+                    <p>Seluruh Barang</p>
+                    <h2 id="jumlahBarang">6</h2>
+                    <small>Barang terdaftar</small>
+                </div>
+
+                <div class="kartu">
+                    <p>Stok Menipis</p>
+                    <h2 id="jumlahMenipis">2</h2>
+                    <small>Perlu diperhatikan</small>
+                </div>
+
+                <div class="kartu">
+                    <p>Stok Habis</p>
+                    <h2 id="jumlahHabis">1</h2>
+                    <small>Segera isi ulang</small>
+                </div>
+
+                <div class="kartu">
+                    <p>Daftar Kebutuhan</p>
+                    <h2 id="jumlahKebutuhan">3</h2>
+                    <small>Barang yang diperlukan</small>
+                </div>
+            </div>
+
+            <!-- Tabel barang -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Daftar Stok Barang</h3>
+                        <p>Persediaan barang rumah tangga</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Kategori</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="daftarBarang"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p class="catatan">
+                Data yang ditampilkan merupakan data contoh untuk tugas kuliah.
+            </p>
+        </section>
+    </main>
+</div>
+
+<!-- Form pop-up tambah barang -->
+<div class="overlay" id="overlay">
+    <div class="form-box">
+        <h2>Tambah Barang</h2>
+        <p>Masukkan informasi barang rumah tangga.</p>
+
+        <form id="formBarang">
+            <label for="nama">Nama Barang</label>
+            <input type="text" id="nama"
+                   placeholder="Contoh: Beras" required>
+
+            <label for="kategori">Kategori</label>
+            <select id="kategori">
+                <option>Bahan Makanan</option>
+                <option>Minuman</option>
+                <option>Kebersihan</option>
+                <option>Perlengkapan Mandi</option>
+                <option>Lainnya</option>
+            </select>
+
+            <label for="jumlah">Jumlah Stok</label>
+            <input type="number" id="jumlah"
+                   min="0" placeholder="Masukkan jumlah" required>
+
+            <label for="satuan">Satuan</label>
+            <select id="satuan">
+                <option>buah</option>
+                <option>bungkus</option>
+                <option>kg</option>
+                <option>liter</option>
+                <option>botol</option>
+                <option>kotak</option>
+            </select>
+
+            <div class="form-actions">
+                <button type="button" class="batal"
+                        onclick="tutupForm()">Batal</button>
+                <button type="submit" class="tombol">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="Beranda.js"></script>
+</body>
+</html>
