@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk atau Daftar - Stockly</title>
+    <link rel="stylesheet" href="HL.css">
+</head>
+<body>
+    <main class="login-page">
+        <section class="login-card">
+
+            <div class="logo-section">
+                <img src="logo pbl.png"
+                     alt="Logo Stockly"
+                     class="logo">
+                <h1>Selamat Datang di Stockly!</h1>
+                <p id="subtitle">Masuk untuk mengelola stok dan kebutuhan rumah tangga Anda.</p>
+            </div>
+
+            <!-- Tab pilihan -->
+            <div class="auth-tabs" role="tablist">
+                <button type="button" class="auth-tab" id="tabLogin" role="tab"
+                        aria-selected="true" aria-controls="loginForm">Masuk</button>
+                <button type="button" class="auth-tab" id="tabRegister" role="tab"
+                        aria-selected="false" aria-controls="registerForm">Daftar</button>
+            </div>
+
+            <p id="message" class="auth-message" role="alert" aria-live="polite"></p>
+
+            <!-- Form masuk -->
+            <form id="loginForm" class="auth-form">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Masukkan email Anda"
+                    autocomplete="email"
+                    required>
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Masukkan password"
+                    autocomplete="current-password"
+                    required>
+                <a href="#" class="forgot-link">Lupa password?</a>
+                <button type="submit">Masuk</button>
+                <p class="switch-text">
+                    Belum punya akun?
+                    <button type="button" id="goRegister">Daftar dulu</button>
+                </p>
+            </form>
+
+            <!-- Form daftar -->
+            <form id="registerForm" class="auth-form" hidden>
+                <label for="regName">Nama lengkap</label>
+                <input
+                    type="text"
+                    id="regName"
+                    name="name"
+                    placeholder="Masukkan nama Anda"
+                    autocomplete="name"
+                    required>
+                <label for="regEmail">Email</label>
+                <input
+                    type="email"
+                    id="regEmail"
+                    name="email"
+                    placeholder="Masukkan email Anda"
+                    autocomplete="email"
+                    required>
+                <label for="regPassword">Password</label>
+                <input
+                    type="password"
+                    id="regPassword"
+                    name="password"
+                    placeholder="Minimal 6 karakter"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required>
+                <label for="regConfirm">Konfirmasi password</label>
+                <input
+                    type="password"
+                    id="regConfirm"
+                    name="confirm"
+                    placeholder="Ulangi password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required>
+                <button type="submit">Daftar</button>
+                <p class="switch-text">
+                    Sudah punya akun?
+                    <button type="button" id="goLogin">Masuk</button>
+                </p>
+            </form>
+
+            <p class="register-text">
+                Aplikasi Stok dan Kebutuhan Rumah Tangga
+            </p>
+        </section>
+    </main>
+
+    <script>
+        const loginForm    = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const tabLogin     = document.getElementById("tabLogin");
+        const tabRegister  = document.getElementById("tabRegister");
+        const message      = document.getElementById("message");
+        const subtitle     = document.getElementById("subtitle");
+
+        const USERS_KEY   = "stocklyUsers";
+        const SESSION_KEY = "stocklyUser";
+
+        /* ---------- Penyimpanan akun (localStorage) ---------- */
+        function getUsers() {
+            try {
+                return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+
+        // Password di-hash agar tidak tersimpan sebagai teks biasa.
+        // Catatan: ini hanya untuk demo/tugas. Aplikasi sungguhan harus
+        // memakai server dan hashing di sisi server.
+        async function hashPassword(text) {
+            if (window.crypto && crypto.subtle) {
+                const data = new TextEncoder().encode(text);
+                const buffer = await crypto.subtle.digest("SHA-256", data);
+                return Array.from(new Uint8Array(buffer))
+                    .map(function (b) { return b.toString(16).padStart(2, "0"); })
+                    .join("");
+            }
+            return btoa(unescape(encodeURIComponent(text)));
+        }
+
+        /* ---------- Tampilan ---------- */
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = "auth-message" + (type ? " " + type : "");
+        }
+
+        function showTab(name) {
+            const isLogin = name === "login";
+            loginForm.hidden = !isLogin;
+            registerForm.hidden = isLogin;
+            tabLogin.setAttribute("aria-selected", isLogin);
+            tabRegister.setAttribute("aria-selected", !isLogin);
+            subtitle.textContent = isLogin
+                ? "Masuk untuk mengelola stok dan kebutuhan rumah tangga Anda."
+                : "Buat akun baru untuk mulai mengelola stok rumah tangga Anda.";
+            showMessage("", "");
+        }
+
+        tabLogin.addEventListener("click", function () { showTab("login"); });
+        tabRegister.addEventListener("click", function () { showTab("register"); });
+        document.getElementById("goRegister").addEventListener("click", function () { showTab("register"); });
+        document.getElementById("goLogin").addEventListener("click", function () { showTab("login"); });
+
+        /* ---------- Daftar ---------- */
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const name     = document.getElementById("regName").value.trim();
+            const email    = document.getElementById("regEmail").value.trim().toLowerCase();
+            const password = document.getElementById("regPassword").value;
+            const confirm  = document.getElementById("regConfirm").value;
+
+            if (password.length < 6) {
+                showMessage("Password minimal 6 karakter.", "error");
+                return;
+            }
+            if (password !== confirm) {
+                showMessage("Konfirmasi password tidak cocok.", "error");
+                return;
+            }
+
+            const users = getUsers();
+            if (users.some(function (u) { return u.email === email; })) {
+                showMessage("Email sudah terdaftar. Silakan masuk.", "error");
+                return;
+            }
+
+            users.push({ name: name, email: email, password: await hashPassword(password) });
+            saveUsers(users);
+
+            registerForm.reset();
+            showTab("login");
+            document.getElementById("email").value = email;
+            showMessage("Pendaftaran berhasil. Silakan masuk.", "success");
+            document.getElementById("password").focus();
+        });
+
+        /* ---------- Masuk ---------- */
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const email    = document.getElementById("email").value.trim().toLowerCase();
+            const password = document.getElementById("password").value;
+
+            const user = getUsers().find(function (u) { return u.email === email; });
+
+            if (!user) {
+                showMessage("Akun belum terdaftar. Silakan daftar dulu.", "error");
+                return;
+            }
+            if (user.password !== await hashPassword(password)) {
+                showMessage("Password salah. Coba lagi.", "error");
+                return;
+            }
+
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ name: user.name, email: user.email }));
+
+            // Berpindah ke halaman beranda
+            window.location.href = "Beranda.html";
+        });
+    </script>
+</body>
+</html>

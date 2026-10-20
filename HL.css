@@ -16,7 +16,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 32px 18px;
-    background: background white;
+    background: #f7faf7;
 }
 
 .login-card {
@@ -68,6 +68,8 @@ form > label {
     color: #285640;
 }
 
+/* Field input (nama lengkap, email, password) */
+input[type="text"],
 input[type="email"],
 input[type="password"] {
     display: block;
@@ -83,6 +85,7 @@ input[type="password"] {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus {
     border-color: #23845e;
@@ -122,6 +125,7 @@ input[type="checkbox"] {
     text-decoration: underline;
 }
 
+/* Tombol utama (Masuk / Daftar) */
 button {
     width: 100%;
     padding: 13px;
@@ -141,6 +145,95 @@ button:hover {
 
 button:active {
     transform: scale(0.99);
+}
+
+/* ---------- Tab Masuk / Daftar ---------- */
+.auth-tabs {
+    display: flex;
+    margin: 0 0 18px;
+    border-bottom: 1px solid #e1eee5;
+}
+
+.auth-tab {
+    width: auto;
+    flex: 1;
+    padding: 12px 8px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    color: #7b8b80;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.auth-tab:hover {
+    background: #f1f8f3;
+    color: #18734f;
+}
+
+.auth-tab:active {
+    transform: none;
+}
+
+.auth-tab[aria-selected="true"] {
+    background: none;
+    color: #18734f;
+    border-bottom-color: #18734f;
+}
+
+.auth-tab:focus-visible {
+    outline: 2px solid #23845e;
+    outline-offset: -2px;
+}
+
+.auth-form[hidden] {
+    display: none;
+}
+
+/* ---------- Pesan error / sukses ---------- */
+.auth-message {
+    min-height: 1.4em;
+    margin: 0 0 12px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.auth-message.error {
+    color: #c62828;
+}
+
+.auth-message.success {
+    color: #1b7a4a;
+}
+
+/* ---------- Tautan "Daftar dulu" / "Masuk" ---------- */
+.switch-text {
+    margin: 16px 0 0;
+    font-size: 13px;
+    text-align: center;
+    color: #52685b;
+}
+
+.switch-text button {
+    display: inline;
+    width: auto;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    color: #18734f;
+    font-size: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.switch-text button:hover {
+    background: none;
+    color: #10583c;
+}
+
+.switch-text button:active {
+    transform: none;
 }
 
 .register-text {
