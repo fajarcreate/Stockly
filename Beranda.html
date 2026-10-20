@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,166 +7,181 @@
     <link rel="stylesheet" href="Beranda.css">
 </head>
 <body>
-
 <div class="container">
 
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="logo">
-            <img src="logo pbl.png" alt="Logo Stocly">
+            <img src="logo pbl.png" alt="Logo Stockly">
             <h2>Stockly</h2>
         </div>
-
-        <p class="menu-title">MENU </p>
-
-        <button class="menu active" onclick="bukaHalaman('Beranda', this)">
-            Beranda
-        </button>
-        <button class="menu" onclick="bukaHalaman('Daftar Stok', this)">
-            Daftar Stok
-        </button>
-        <button class="menu" onclick="bukaHalaman('Kebutuhan', this)">
-            Kebutuhan
-        </button>
-        <button class="menu" onclick="bukaHalaman('Riwayat', this)">
-            Riwayat
-        </button>
+        <p class="menu-title">MENU</p>
+        <button class="menu active" data-view="beranda">Beranda</button>
+        <button class="menu" data-view="stok">Daftar Stok</button>
+        <button class="menu" data-view="kebutuhan">Kebutuhan <span class="pill" id="pillKebutuhan">0</span></button>
+        <button class="menu" data-view="riwayat">Riwayat</button>
+        <button class="menu keluar" id="btnKeluar">Keluar</button>
     </aside>
 
-    <!-- Konten utama -->
     <main class="main-content">
-
         <header class="header">
-            <button class="toggle" onclick="toggleSidebar()">☰</button>
-
-            <div>
+            <button class="toggle" id="btnToggle" aria-label="Buka atau tutup menu">☰</button>
+            <div class="judul">
                 <small>STOCKLY</small>
                 <h2 id="judulHeader">Beranda</h2>
             </div>
-
             <div class="akun">
-                <div class="avatar">AR</div>
+                <div class="avatar" id="avatar">U</div>
                 <div>
-                    <strong>Alya Najwa</strong>
+                    <strong id="namaUser">Pengguna</strong>
                     <small>Pengguna</small>
                 </div>
             </div>
         </header>
 
-        <section class="content" id="isiHalaman">
+        <section class="content">
 
-            <!-- Sambutan -->
-            <div class="welcome">
-                <div>
-                    <h1>Selamat pagi, Alya</h1>
-                    <p>Berikut ringkasan persediaan rumah tangga Anda hari ini.</p>
-                </div>
-
-                <button class="tombol" onclick="bukaForm()">
-                    + Tambah Barang
-                </button>
-            </div>
-
-            <!-- Ringkasan stok -->
-            <div class="ringkasan">
-                <div class="kartu">
-                    <p>Seluruh Barang</p>
-                    <h2 id="jumlahBarang">6</h2>
-                    <small>Barang terdaftar</small>
-                </div>
-
-                <div class="kartu">
-                    <p>Stok Menipis</p>
-                    <h2 id="jumlahMenipis">2</h2>
-                    <small>Perlu diperhatikan</small>
-                </div>
-
-                <div class="kartu">
-                    <p>Stok Habis</p>
-                    <h2 id="jumlahHabis">1</h2>
-                    <small>Segera isi ulang</small>
-                </div>
-
-                <div class="kartu">
-                    <p>Daftar Kebutuhan</p>
-                    <h2 id="jumlahKebutuhan">3</h2>
-                    <small>Barang yang diperlukan</small>
-                </div>
-            </div>
-
-            <!-- Tabel barang -->
-            <div class="panel">
-                <div class="panel-header">
+            <!-- BERANDA -->
+            <div class="view" id="view-beranda">
+                <div class="welcome">
                     <div>
-                        <h3>Daftar Stok Barang</h3>
-                        <p>Persediaan barang rumah tangga</p>
+                        <h1 id="sapaan">Selamat datang</h1>
+                        <p id="tanggal"></p>
+                    </div>
+                    <button class="tombol" data-act="tambah">+ Tambah Barang</button>
+                </div>
+
+                <div class="ringkasan">
+                    <button class="kartu" data-act="goto" data-view="stok">
+                        <p>Seluruh Barang</p><h2 id="jumlahBarang">0</h2><small>Barang terdaftar</small>
+                    </button>
+                    <button class="kartu menipis" data-act="goto" data-view="stok" data-st="Menipis">
+                        <p>Stok Menipis</p><h2 id="jumlahMenipis">0</h2><small>Perlu diperhatikan</small>
+                    </button>
+                    <button class="kartu habis" data-act="goto" data-view="stok" data-st="Habis">
+                        <p>Stok Habis</p><h2 id="jumlahHabis">0</h2><small>Segera isi ulang</small>
+                    </button>
+                    <button class="kartu" data-act="goto" data-view="kebutuhan">
+                        <p>Daftar Kebutuhan</p><h2 id="jumlahKebutuhan">0</h2><small>Belum dibeli</small>
+                    </button>
+                </div>
+
+                <div class="dua-kolom">
+                    <div class="panel">
+                        <h3>Perlu perhatian</h3>
+                        <ul class="daftar" id="listPerhatian"></ul>
+                    </div>
+                    <div class="panel">
+                        <h3>Aktivitas terbaru</h3>
+                        <ul class="daftar" id="listAktivitas"></ul>
                     </div>
                 </div>
 
-                <div class="table-container">
+                <div class="panel">
+                    <h3>Barang per kategori</h3>
+                    <div id="kategoriBar"></div>
+                </div>
+
+                <p class="catatan">
+                    Data tersimpan di browser ini.
+                    <button class="link" data-act="reset">Kembalikan data contoh</button>
+                </p>
+            </div>
+
+            <!-- DAFTAR STOK -->
+            <div class="view" id="view-stok" hidden>
+                <div class="toolbar">
+                    <input type="search" id="cari" placeholder="Cari nama barang">
+                    <select id="fKategori" aria-label="Filter kategori"></select>
+                    <select id="fStatus" aria-label="Filter status">
+                        <option value="">Semua status</option>
+                        <option>Aman</option><option>Menipis</option><option>Habis</option>
+                    </select>
+                    <select id="fUrut" aria-label="Urutkan">
+                        <option value="nama">Urut nama</option>
+                        <option value="jumlah">Jumlah terendah</option>
+                        <option value="status">Status terparah</option>
+                    </select>
+                    <button class="tombol kecil" data-act="ekspor">Ekspor CSV</button>
+                    <button class="tombol kecil" data-act="tambah">+ Tambah</button>
+                </div>
+                <div class="panel tabel">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Nama Barang</th>
-                                <th>Kategori</th>
-                                <th>Jumlah</th>
-                                <th>Status</th>
-                            </tr>
+                            <tr><th>Nama Barang</th><th>Kategori</th><th>Jumlah</th><th>Minimum</th><th>Status</th><th>Aksi</th></tr>
                         </thead>
                         <tbody id="daftarBarang"></tbody>
                     </table>
                 </div>
             </div>
 
-            <p class="catatan">
-                Data yang ditampilkan merupakan data contoh untuk tugas kuliah.
-            </p>
+            <!-- KEBUTUHAN -->
+            <div class="view" id="view-kebutuhan" hidden>
+                <div class="panel">
+                    <form class="baris-form" id="formKebutuhan">
+                        <input type="text" id="namaKebutuhan" placeholder="Tambah barang yang perlu dibeli" required>
+                        <button type="submit" class="tombol kecil">Tambah</button>
+                    </form>
+                    <div class="aksi-list">
+                        <button class="link" data-act="isiOtomatis">Isi dari stok menipis dan habis</button>
+                        <button class="link" data-act="hapusSelesai">Hapus yang sudah dibeli</button>
+                    </div>
+                    <ul class="daftar" id="listKebutuhan"></ul>
+                </div>
+            </div>
+
+            <!-- RIWAYAT -->
+            <div class="view" id="view-riwayat" hidden>
+                <div class="panel">
+                    <div class="aksi-list">
+                        <button class="link" data-act="hapusRiwayat">Hapus semua riwayat</button>
+                    </div>
+                    <ul class="daftar" id="listRiwayat"></ul>
+                </div>
+            </div>
+
         </section>
     </main>
 </div>
 
-<!-- Form pop-up tambah barang -->
+<!-- Form tambah / ubah barang -->
 <div class="overlay" id="overlay">
-    <div class="form-box">
-        <h2>Tambah Barang</h2>
-        <p>Masukkan informasi barang rumah tangga.</p>
-
+    <div class="form-box" role="dialog" aria-modal="true" aria-labelledby="judulForm">
+        <h2 id="judulForm">Tambah Barang</h2>
         <form id="formBarang">
+            <input type="hidden" id="idBarang">
+
             <label for="nama">Nama Barang</label>
-            <input type="text" id="nama"
-                   placeholder="Contoh: Beras" required>
+            <input type="text" id="nama" placeholder="Contoh: Beras" required>
 
             <label for="kategori">Kategori</label>
-            <select id="kategori">
-                <option>Bahan Makanan</option>
-                <option>Minuman</option>
-                <option>Kebersihan</option>
-                <option>Perlengkapan Mandi</option>
-                <option>Lainnya</option>
-            </select>
+            <select id="kategori"></select>
 
-            <label for="jumlah">Jumlah Stok</label>
-            <input type="number" id="jumlah"
-                   min="0" placeholder="Masukkan jumlah" required>
+            <div class="grid-2">
+                <div>
+                    <label for="jumlah">Jumlah Stok</label>
+                    <input type="number" id="jumlah" min="0" placeholder="0" required>
+                </div>
+                <div>
+                    <label for="satuan">Satuan</label>
+                    <select id="satuan">
+                        <option>buah</option><option>bungkus</option><option>kg</option>
+                        <option>liter</option><option>botol</option><option>kotak</option>
+                    </select>
+                </div>
+            </div>
 
-            <label for="satuan">Satuan</label>
-            <select id="satuan">
-                <option>buah</option>
-                <option>bungkus</option>
-                <option>kg</option>
-                <option>liter</option>
-                <option>botol</option>
-                <option>kotak</option>
-            </select>
+            <label for="min">Batas minimum (status menipis)</label>
+            <input type="number" id="min" min="0" value="2" required>
 
             <div class="form-actions">
-                <button type="button" class="batal"
-                        onclick="tutupForm()">Batal</button>
+                <button type="button" class="batal" data-act="batal">Batal</button>
                 <button type="submit" class="tombol">Simpan</button>
             </div>
         </form>
     </div>
 </div>
+
+<div id="toasts" aria-live="polite"></div>
 
 <script src="Beranda.js"></script>
 </body>
