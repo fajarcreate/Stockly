@@ -9,22 +9,25 @@
 <body>
 <div class="container">
 
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="logo">
             <img src="logo pbl.png" alt="Logo Stockly">
             <h2>Stockly</h2>
         </div>
         <p class="menu-title">MENU</p>
-        <button class="menu active" data-view="beranda">Beranda</button>
-        <button class="menu" data-view="stok">Daftar Stok</button>
-        <button class="menu" data-view="kebutuhan">Kebutuhan <span class="pill" id="pillKebutuhan">0</span></button>
-        <button class="menu" data-view="riwayat">Riwayat</button>
-        <button class="menu keluar" id="btnKeluar">Keluar</button>
+        <button class="menu active" data-view="beranda" onclick="bukaHalaman('beranda')">Beranda</button>
+        <button class="menu" data-view="stok" onclick="bukaHalaman('stok')">Daftar Stok</button>
+        <button class="menu" data-view="kategori" onclick="bukaHalaman('kategori')">Kategori</button>
+        <button class="menu" data-view="kebutuhan" onclick="bukaHalaman('kebutuhan')">Kebutuhan <span class="pill" id="pillKebutuhan">0</span></button>
+        <button class="menu" data-view="riwayat" onclick="bukaHalaman('riwayat')">Riwayat</button>
+        <button class="menu keluar" onclick="keluar()">Keluar</button>
     </aside>
 
+    <!-- Konten utama -->
     <main class="main-content">
         <header class="header">
-            <button class="toggle" id="btnToggle" aria-label="Buka atau tutup menu">☰</button>
+            <button class="toggle" onclick="toggleSidebar()" aria-label="Buka atau tutup menu">☰</button>
             <div class="judul">
                 <small>STOCKLY</small>
                 <h2 id="judulHeader">Beranda</h2>
@@ -40,40 +43,51 @@
 
         <section class="content">
 
-            <!-- BERANDA -->
+            <!-- ===== BERANDA (rekap) ===== -->
             <div class="view" id="view-beranda">
                 <div class="welcome">
                     <div>
                         <h1 id="sapaan">Selamat datang</h1>
                         <p id="tanggal"></p>
                     </div>
-                    <button class="tombol" data-act="tambah">+ Tambah Barang</button>
+                    <button class="tombol" onclick="bukaFormBarang(0)">+ Tambah Barang</button>
                 </div>
 
                 <div class="ringkasan">
-                    <button class="kartu" data-act="goto" data-view="stok">
+                    <button class="kartu" onclick="lihatStok('')">
                         <p>Seluruh Barang</p><h2 id="jumlahBarang">0</h2><small>Barang terdaftar</small>
                     </button>
-                    <button class="kartu menipis" data-act="goto" data-view="stok" data-st="Menipis">
+                    <button class="kartu menipis" onclick="lihatStok('Menipis')">
                         <p>Stok Menipis</p><h2 id="jumlahMenipis">0</h2><small>Perlu diperhatikan</small>
                     </button>
-                    <button class="kartu habis" data-act="goto" data-view="stok" data-st="Habis">
+                    <button class="kartu habis" onclick="lihatStok('Habis')">
                         <p>Stok Habis</p><h2 id="jumlahHabis">0</h2><small>Segera isi ulang</small>
                     </button>
-                    <button class="kartu" data-act="goto" data-view="kebutuhan">
+                    <button class="kartu" onclick="bukaHalaman('kebutuhan')">
                         <p>Daftar Kebutuhan</p><h2 id="jumlahKebutuhan">0</h2><small>Belum dibeli</small>
                     </button>
                 </div>
 
                 <div class="dua-kolom">
                     <div class="panel">
-                        <h3>Perlu perhatian</h3>
+                        <h3>Barang hampir habis</h3>
                         <ul class="daftar" id="listPerhatian"></ul>
                     </div>
                     <div class="panel">
                         <h3>Aktivitas terbaru</h3>
                         <ul class="daftar" id="listAktivitas"></ul>
                     </div>
+                </div>
+
+                <div class="panel tabel">
+                    <h3 class="judul-tabel">Rekap stok per kategori</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Kategori</th><th>Jumlah Barang</th><th>Total Stok</th><th>Hampir Habis</th></tr>
+                        </thead>
+                        <tbody id="tabelRekap"></tbody>
+                    </table>
+                    <p class="info-rekap" id="rekapMasukKeluar"></p>
                 </div>
 
                 <div class="panel">
@@ -83,59 +97,103 @@
 
                 <p class="catatan">
                     Data tersimpan di browser ini.
-                    <button class="link" data-act="reset">Kembalikan data contoh</button>
+                    <button class="link" onclick="kembalikanContoh()">Kembalikan data contoh</button>
                 </p>
             </div>
 
-            <!-- DAFTAR STOK -->
+            <!-- ===== DAFTAR STOK (FR-02, FR-03, FR-05, FR-06) ===== -->
             <div class="view" id="view-stok" hidden>
                 <div class="toolbar">
-                    <input type="search" id="cari" placeholder="Cari nama barang">
-                    <select id="fKategori" aria-label="Filter kategori"></select>
-                    <select id="fStatus" aria-label="Filter status">
+                    <input type="search" id="cari" placeholder="Cari nama, kategori, atau lokasi" oninput="tampilStok()">
+                    <select id="fKategori" onchange="tampilStok()" aria-label="Filter kategori"></select>
+                    <select id="fStatus" onchange="tampilStok()" aria-label="Filter status">
                         <option value="">Semua status</option>
-                        <option>Aman</option><option>Menipis</option><option>Habis</option>
+                        <option>Aman</option>
+                        <option>Menipis</option>
+                        <option>Habis</option>
+                        <option value="Dibeli">Perlu dibeli</option>
                     </select>
-                    <select id="fUrut" aria-label="Urutkan">
+                    <select id="fUrut" onchange="tampilStok()" aria-label="Urutkan">
                         <option value="nama">Urut nama</option>
-                        <option value="jumlah">Jumlah terendah</option>
+                        <option value="jumlah">Stok terendah</option>
                         <option value="status">Status terparah</option>
                     </select>
-                    <button class="tombol kecil" data-act="ekspor">Ekspor CSV</button>
-                    <button class="tombol kecil" data-act="tambah">+ Tambah</button>
+                    <button class="tombol kecil" onclick="eksporCSV()">Ekspor CSV</button>
+                    <button class="tombol kecil" onclick="bukaFormBarang(0)">+ Tambah</button>
                 </div>
                 <div class="panel tabel">
                     <table>
                         <thead>
-                            <tr><th>Nama Barang</th><th>Kategori</th><th>Jumlah</th><th>Minimum</th><th>Status</th><th>Aksi</th></tr>
+                            <tr>
+                                <th>Nama Barang</th><th>Kategori</th><th>Lokasi</th><th>Stok</th>
+                                <th>Minimum</th><th>Status</th><th>Aksi</th>
+                            </tr>
                         </thead>
                         <tbody id="daftarBarang"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- KEBUTUHAN -->
+            <!-- ===== KATEGORI (FR-01) ===== -->
+            <div class="view" id="view-kategori" hidden>
+                <div class="toolbar">
+                    <button class="tombol kecil" onclick="bukaFormKategori(0)">+ Tambah Kategori</button>
+                </div>
+                <div class="panel tabel">
+                    <table>
+                        <thead>
+                            <tr><th>Nama Kategori</th><th>Jumlah Barang</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="daftarKategori"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== KEBUTUHAN (FR-04, FR-06) ===== -->
             <div class="view" id="view-kebutuhan" hidden>
+                <div class="panel tabel">
+                    <h3 class="judul-tabel">Daftar belanja</h3>
+                    <p class="info-rekap">Berisi barang yang stoknya sama dengan atau di bawah minimum, dan barang yang ditandai perlu dibeli.</p>
+                    <table>
+                        <thead>
+                            <tr><th>Barang</th><th>Lokasi</th><th>Stok</th><th>Minimum</th><th>Alasan</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="tabelBelanja"></tbody>
+                    </table>
+                </div>
+
                 <div class="panel">
-                    <form class="baris-form" id="formKebutuhan">
+                    <h3>Catatan kebutuhan lain</h3>
+                    <form class="baris-form" onsubmit="tambahCatatan(event)">
                         <input type="text" id="namaKebutuhan" placeholder="Tambah barang yang perlu dibeli" required>
                         <button type="submit" class="tombol kecil">Tambah</button>
                     </form>
                     <div class="aksi-list">
-                        <button class="link" data-act="isiOtomatis">Isi dari stok menipis dan habis</button>
-                        <button class="link" data-act="hapusSelesai">Hapus yang sudah dibeli</button>
+                        <span></span>
+                        <button class="link" onclick="hapusCatatanSelesai()">Hapus yang sudah dibeli</button>
                     </div>
                     <ul class="daftar" id="listKebutuhan"></ul>
                 </div>
             </div>
 
-            <!-- RIWAYAT -->
+            <!-- ===== RIWAYAT (FR-03, FR-07) ===== -->
             <div class="view" id="view-riwayat" hidden>
-                <div class="panel">
-                    <div class="aksi-list">
-                        <button class="link" data-act="hapusRiwayat">Hapus semua riwayat</button>
-                    </div>
-                    <ul class="daftar" id="listRiwayat"></ul>
+                <div class="toolbar">
+                    <select id="fJenis" onchange="tampilRiwayat()" aria-label="Filter jenis">
+                        <option value="">Semua jenis</option>
+                        <option>Masuk</option>
+                        <option>Keluar</option>
+                        <option value="Info">Perubahan data</option>
+                    </select>
+                    <button class="tombol kecil" onclick="hapusRiwayat()">Hapus semua riwayat</button>
+                </div>
+                <div class="panel tabel">
+                    <table>
+                        <thead>
+                            <tr><th>Waktu</th><th>Barang</th><th>Jenis</th><th>Jumlah</th><th>Stok Akhir</th><th>Keterangan</th></tr>
+                        </thead>
+                        <tbody id="tabelRiwayat"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -143,11 +201,11 @@
     </main>
 </div>
 
-<!-- Form tambah / ubah barang -->
-<div class="overlay" id="overlay">
-    <div class="form-box" role="dialog" aria-modal="true" aria-labelledby="judulForm">
+<!-- Form pop-up tambah / ubah barang -->
+<div class="overlay" id="overlayBarang">
+    <div class="form-box">
         <h2 id="judulForm">Tambah Barang</h2>
-        <form id="formBarang">
+        <form onsubmit="simpanBarang(event)">
             <input type="hidden" id="idBarang">
 
             <label for="nama">Nama Barang</label>
@@ -156,32 +214,83 @@
             <label for="kategori">Kategori</label>
             <select id="kategori"></select>
 
+            <label for="lokasi">Lokasi Penyimpanan</label>
+            <input type="text" id="lokasi" placeholder="Contoh: Dapur, rak atas" required>
+
             <div class="grid-2">
                 <div>
-                    <label for="jumlah">Jumlah Stok</label>
+                    <label for="jumlah">Stok Saat Ini</label>
                     <input type="number" id="jumlah" min="0" placeholder="0" required>
                 </div>
                 <div>
                     <label for="satuan">Satuan</label>
                     <select id="satuan">
-                        <option>buah</option><option>bungkus</option><option>kg</option>
-                        <option>liter</option><option>botol</option><option>kotak</option>
+                        <option>buah</option>
+                        <option>bungkus</option>
+                        <option>kg</option>
+                        <option>liter</option>
+                        <option>botol</option>
+                        <option>kotak</option>
                     </select>
                 </div>
             </div>
 
-            <label for="min">Batas minimum (status menipis)</label>
+            <label for="min">Stok Minimum</label>
             <input type="number" id="min" min="0" value="2" required>
 
             <div class="form-actions">
-                <button type="button" class="batal" data-act="batal">Batal</button>
+                <button type="button" class="batal" onclick="tutupForm('overlayBarang')">Batal</button>
                 <button type="submit" class="tombol">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="toasts" aria-live="polite"></div>
+<!-- Form pop-up kategori -->
+<div class="overlay" id="overlayKategori">
+    <div class="form-box">
+        <h2 id="judulKategori">Tambah Kategori</h2>
+        <form onsubmit="simpanKategori(event)">
+            <input type="hidden" id="idKategori">
+            <label for="namaKategori">Nama Kategori</label>
+            <input type="text" id="namaKategori" placeholder="Contoh: Bumbu Dapur" required>
+            <div class="form-actions">
+                <button type="button" class="batal" onclick="tutupForm('overlayKategori')">Batal</button>
+                <button type="submit" class="tombol">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Form pop-up stok masuk / keluar -->
+<div class="overlay" id="overlayStok">
+    <div class="form-box">
+        <h2>Catat Stok</h2>
+        <p class="nama-stok" id="infoStok"></p>
+        <form onsubmit="simpanStok(event)">
+            <input type="hidden" id="idStok">
+
+            <label for="jenisStok">Jenis</label>
+            <select id="jenisStok">
+                <option value="Masuk">Stok masuk</option>
+                <option value="Keluar">Stok keluar</option>
+            </select>
+
+            <label for="jumlahStok">Jumlah</label>
+            <input type="number" id="jumlahStok" min="1" placeholder="Masukkan jumlah" required>
+
+            <label for="ketStok">Keterangan (boleh kosong)</label>
+            <input type="text" id="ketStok" placeholder="Contoh: Belanja bulanan">
+
+            <div class="form-actions">
+                <button type="button" class="batal" onclick="tutupForm('overlayStok')">Batal</button>
+                <button type="submit" class="tombol">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="toasts"></div>
 
 <script src="Beranda.js"></script>
 </body>
