@@ -48,19 +48,18 @@
                 <div class="welcome">
                     <div>
                         <h1 id="sapaan">Selamat datang</h1>
-                        <p id="tanggal"></p>
                     </div>
                     <button class="tombol" onclick="bukaFormBarang(0)">+ Tambah Barang</button>
                 </div>
 
                 <div class="ringkasan">
-                    <button class="kartu" onclick="lihatStok('')">
+                    <button class="kartu" onclick="bukaHalaman('stok')">
                         <p>Seluruh Barang</p><h2 id="jumlahBarang">0</h2><small>Barang terdaftar</small>
                     </button>
-                    <button class="kartu menipis" onclick="lihatStok('Menipis')">
+                    <button class="kartu menipis" onclick="bukaHalaman('stok')">
                         <p>Stok Menipis</p><h2 id="jumlahMenipis">0</h2><small>Perlu diperhatikan</small>
                     </button>
-                    <button class="kartu habis" onclick="lihatStok('Habis')">
+                    <button class="kartu habis" onclick="bukaHalaman('stok')">
                         <p>Stok Habis</p><h2 id="jumlahHabis">0</h2><small>Segera isi ulang</small>
                     </button>
                     <button class="kartu" onclick="bukaHalaman('kebutuhan')">
@@ -90,15 +89,6 @@
                     <p class="info-rekap" id="rekapMasukKeluar"></p>
                 </div>
 
-                <div class="panel">
-                    <h3>Barang per kategori</h3>
-                    <div id="kategoriBar"></div>
-                </div>
-
-                <p class="catatan">
-                    Data tersimpan di browser ini.
-                    <button class="link" onclick="kembalikanContoh()">Kembalikan data contoh</button>
-                </p>
             </div>
 
             <!-- ===== DAFTAR STOK (FR-02, FR-03, FR-05, FR-06) ===== -->
@@ -113,12 +103,6 @@
                         <option>Habis</option>
                         <option value="Dibeli">Perlu dibeli</option>
                     </select>
-                    <select id="fUrut" onchange="tampilStok()" aria-label="Urutkan">
-                        <option value="nama">Urut nama</option>
-                        <option value="jumlah">Stok terendah</option>
-                        <option value="status">Status terparah</option>
-                    </select>
-                    <button class="tombol kecil" onclick="eksporCSV()">Ekspor CSV</button>
                     <button class="tombol kecil" onclick="bukaFormBarang(0)">+ Tambah</button>
                 </div>
                 <div class="panel tabel">
@@ -162,18 +146,6 @@
                     </table>
                 </div>
 
-                <div class="panel">
-                    <h3>Catatan kebutuhan lain</h3>
-                    <form class="baris-form" onsubmit="tambahCatatan(event)">
-                        <input type="text" id="namaKebutuhan" placeholder="Tambah barang yang perlu dibeli" required>
-                        <button type="submit" class="tombol kecil">Tambah</button>
-                    </form>
-                    <div class="aksi-list">
-                        <span></span>
-                        <button class="link" onclick="hapusCatatanSelesai()">Hapus yang sudah dibeli</button>
-                    </div>
-                    <ul class="daftar" id="listKebutuhan"></ul>
-                </div>
             </div>
 
             <!-- ===== RIWAYAT (FR-03, FR-07) ===== -->
@@ -289,8 +261,6 @@
         </form>
     </div>
 </div>
-
-<div id="toasts"></div>
 
 <script src="Beranda.js"></script>
 </body>
