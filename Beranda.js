@@ -1,16 +1,3 @@
-// ============================================================
-// STOCKLY - Beranda.js
-// Data disimpan di localStorage browser (belum memakai server).
-// Pola yang dipakai di mana-mana:
-//   ambil data -> ubah array -> simpan -> tampilkan ulang (tampilSemua)
-// ============================================================
-
-
-// ============================================================
-// 1. FUNGSI BANTU
-// ============================================================
-
-// Mengambil data dari localStorage. Kalau belum ada, pakai nilai cadangan.
 function ambilData(kunci, cadangan) {
     var teks = localStorage.getItem(kunci);
     if (teks == null) {
@@ -43,20 +30,13 @@ function waktu(angka) {
     return new Date(angka).toLocaleString("id-ID");
 }
 
-
-// ============================================================
-// 2. CEK LOGIN
-// ============================================================
+//  CEK LOGIN
 var user = ambilData("stocklyUser", null);
 if (user == null) {
-    window.location.href = "Login.html";   // belum login -> kembali ke halaman login
+    window.location.href = "index.html";   // belum login -> kembali ke halaman login
 }
 
-
-// ============================================================
-// 3. DATA APLIKASI
-// ============================================================
-
+//  DATA APLIKASI
 // Satu barang berisi: nama, kategori, lokasi, stok saat ini (jumlah),
 // satuan, stok minimum (min), dan penanda perlu dibeli.
 function buatBarang(nama, kategori, lokasi, jumlah, satuan, min) {
@@ -100,11 +80,7 @@ if (barang == null) {
 // Riwayat perubahan. Jenisnya: "Masuk", "Keluar", atau "Info".
 var riwayat = ambilData("stocklyRiwayat", []);
 
-
-// ============================================================
-// 4. FUNGSI PENGECEKAN
-// ============================================================
-
+//  FUNGSI PENGECEKAN
 // Status stok: Habis (0), Menipis (sama atau di bawah minimum), atau Aman.
 function status(b) {
     if (b.jumlah <= 0) {
@@ -164,10 +140,7 @@ function catatRiwayat(nama, jenis, jumlah, stokAkhir, ket) {
     });
 }
 
-
-// ============================================================
-// 5. MENAMPILKAN DATA KE HALAMAN
-// ============================================================
+//  MENAMPILKAN DATA KE HALAMAN
 
 // Menyimpan semua data, menghitung ringkasan, lalu menampilkan ulang semuanya.
 function tampilSemua() {
@@ -418,10 +391,7 @@ function tampilRiwayat() {
     document.getElementById("tabelRiwayat").innerHTML = html;
 }
 
-
-// ============================================================
 // 6. NAVIGASI
-// ============================================================
 var judulHalaman = {
     beranda: "Beranda",
     stok: "Daftar Stok",
@@ -461,7 +431,7 @@ function toggleSidebar() {
 function keluar() {
     if (confirm("Keluar dari Stockly?")) {
         localStorage.removeItem("stocklyUser");
-        window.location.href = "Login.html";
+        window.location.href = "index.html";
     }
 }
 
@@ -470,10 +440,7 @@ function tutupForm(idOverlay) {
     document.getElementById(idOverlay).classList.remove("show");
 }
 
-
-// ============================================================
-// 7. FR-02: TAMBAH, UBAH, HAPUS BARANG
-// ============================================================
+//  FR-02: TAMBAH, UBAH, HAPUS BARANG
 
 // Mengisi pilihan kategori di form barang.
 function isiPilihanKategori() {
@@ -568,10 +535,7 @@ function hapusBarang(id) {
     }
 }
 
-
-// ============================================================
-// 8. FR-03: STOK MASUK DAN KELUAR
-// ============================================================
+//  FR-03: STOK MASUK DAN KELUAR
 function bukaFormStok(id) {
     var b = cariBarang(id);
     document.getElementById("idStok").value = b.id;
@@ -614,10 +578,7 @@ function ubahStok(id, jenis, jumlah, ket) {
     return true;
 }
 
-
-// ============================================================
-// 9. FR-06: TANDAI PERLU DIBELI
-// ============================================================
+//  FR-06: TANDAI PERLU DIBELI
 function tandaiBeli(id) {
     var b = cariBarang(id);
     b.perluBeli = !b.perluBeli;   // kebalikan dari nilai sekarang
@@ -629,10 +590,7 @@ function tandaiBeli(id) {
     tampilSemua();
 }
 
-
-// ============================================================
-// 10. FR-01: TAMBAH, UBAH, HAPUS KATEGORI
-// ============================================================
+//  FR-01: TAMBAH, UBAH, HAPUS KATEGORI
 function bukaFormKategori(id) {
     var k = cariKategori(id);
     if (k != null) {
@@ -700,10 +658,7 @@ function hapusKategori(id) {
     }
 }
 
-
-// ============================================================
-// 11. RIWAYAT
-// ============================================================
+//  RIWAYAT
 function hapusRiwayat() {
     if (confirm("Hapus semua riwayat?")) {
         riwayat = [];
@@ -711,10 +666,7 @@ function hapusRiwayat() {
     }
 }
 
-
-// ============================================================
-// 12. DIJALANKAN SAAT HALAMAN DIBUKA
-// ============================================================
+//  DIJALANKAN SAAT HALAMAN DIBUKA
 document.getElementById("sapaan").textContent = "Selamat datang, " + user.name.split(" ")[0];
 document.getElementById("namaUser").textContent = user.name;
 document.getElementById("avatar").textContent = user.name.charAt(0).toUpperCase();
